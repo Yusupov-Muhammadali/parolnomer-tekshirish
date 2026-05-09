@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .login-form{
+        background-color: #EEEEEE;
+        border-radius: 24px;
+        width: 250px;
+        height: 320px;
+        position: absolute;
+      }
+      button{
+        width: 100%;
+        background-color: #A91079;
+        font-weight: 500;
+        font-style: Medium;
+        font-size: 20px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+        border-radius: 5px;
+        border: none;
+        width: 160px;
+        height: 34px;
+        position: absolute;
+        top: 243px;
+        right: 38px;
+        color: #fff;
+      }
+      .div{
+        background-color: #2E0249;
+        width: 550px;
+        height: 350px;
+        border-radius: 24px;
+        margin: 0 auto;
+        padding: 15px;
+      }
+      .h1{
+        color: #fff;
+        position: absolute;
+        right: 470px;
+        top: 12px;
+      }
+      .login-phone{
+        border: none;
+        border-bottom: 3px solid #2E02494D;
+        background-color: #EEEEEE;
+        position: absolute;
+        top: 20px;
+        left: 44px;
+      }
+      .login-password{
+        border: none;
+        border-bottom: 3px solid #2E02494D;
+        background-color: #EEEEEE;
+        position: absolute;
+        top: 50px;
+        left: 44px;
+      }
+      .pink{
+        color: #A91079;
+      }
+      .d{
+        color: #fff;
+        position: absolute;
+        right: 625px;
+        top: 110px;
+        font-size: 20px;
+      }
+    </style>
+</head>
+<body>
+    
+  <div class="div">
+    <form action="" class="login-form">
+        <input type="text" class="login-phone" placeholder="Phone number">
+        <input type="password" class="login-password" placeholder="Password">
+        <button type="submit">login</button>
+
+    </form>
+
+        <div class="d">
+      <h4 class="ism"><i class='bx bxs-phone-call' style='color:#a91079'  ></i>+998339538000</h4>
+      <h4 class="em"><i class='bx bx-shield-minus' style='color:#a91079' ></i>12345678</h4>
+    </div>
+  
+</div>
+    <script>
+        const loginForm = document.querySelector(".login-form")
+        const loginPhone = document.querySelector(".login-phone")
+        const loginPassword = document.querySelector(".login-password")
+        
+        let base_url = "https://backend-rms-production.up.railway.app"
+        
+        loginForm.onsubmit = (evt) => {
+            evt.preventDefault();
+            
+            fetch(`${base_url}/auth/login`, {
+                // method apiga yuborish usuli Create - POST, Read - GET, Update - PUTCH, Delete - DELETE
+                method : "POST",
+                // API ga biz jonatayotgan malumotni sozlaymiz
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                // biz api ga jonatadigan malumotlar
+                body : JSON.stringify({
+                    phone: loginPhone.value,
+                    password: loginPassword.value
+                })
+            })
+            .then((javob) => javob.json())
+            .then((malumot) => { 
+                console.log(malumot)
+                localStorage.setItem("token",malumot.access_token)
+                localStorage.setItem("role",malumot.user.role)
+                let token = localStorage.getItem("token")
+                let role = localStorage.getItem("role")
+                if(token && role == "owner"){
+                    window.location.href = "./admin.html"
+                }
+            })
+            .catch((xatolik) => {
+                console.log("Xatolik : ", xatolik)
+            })
+            .finally(() => {
+                console.log("Login")
+            })
+        }
+    </script>
+</body>
+</html>
